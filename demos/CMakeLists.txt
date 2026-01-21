@@ -6,8 +6,8 @@ build_application(
     application.cpp
     
     PACKAGES
-    library-template
+    metal-cpp
 
     LINK_PACKAGES
-    library-template
+    metal-cpp
 )

@@ -8,15 +8,15 @@ required_conan_version = ">=2.2.0"
 
 
 class LibraryRecipe(ConanFile):
-    name = "library-template"
+    name = "metalcpp"
     version = "1.0"
     license = "Apache-2.0"
-    url = "https://github.com/engine3d-dev/library_template"
+    url = "https://github.com/engine3d-dev/metal-cpp"
     settings = "compiler", "build_type", "os", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
-    exports_sources = "library_template/*", "tests/*", "CMakeLists.txt", "LICENSE"
 
+    exports_sources = "metal-cpp/*", "tests/*", "CMakeLists.txt", "LICENSE"
     def build_requirements(self):
         self.tool_requires("cmake/[^4.0.0]")
         self.tool_requires("ninja/[^1.3.0]")
@@ -25,13 +25,21 @@ class LibraryRecipe(ConanFile):
 
     def requirements(self):
         # Put your dependencies here
-        pass
+        self.requires("glfw/3.4")
+        self.requires("metal-cpp/15")
 
     def layout(self):
         cmake_layout(self)
 
     def generate(self):
+        llvm_path = self.dependencies.build["llvm-toolchain"].package_folder
+        clang_tidy_path = f"{llvm_path}/bin/clang-tidy"
+
+        self.output.info(f"{clang_tidy_path} found!")
+
         tc = CMakeToolchain(self)
+        tc.variables["CMAKE_CXX_CLANG_TIDY"] = clang_tidy_path
+
         tc.generator = "Ninja"
         tc.generate()
 

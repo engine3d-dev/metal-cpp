@@ -18,7 +18,7 @@ class Demo(ConanFile):
 
     # Putting all of your packages here
     def requirements(self):
-        self.requires("library-template/1.0")
+        self.requires("metal-cpp/1.0")
 
     def build(self):
         cmake = CMake(self)
